@@ -14,5 +14,12 @@
     "archivist1": "^1.1.18",
     "node-fetch": "^2.6.0",
     "puppeteer": "^2.1.1"
+  },
+  "devDependencies": {
+    "@umaar/personal-eslint-config": "^1.0.2",
+    "xo": "^0.29.1"
+  },
+  "xo": {
+    "extends": "./node_modules/@umaar/personal-eslint-config/rules.json"
   }
 }

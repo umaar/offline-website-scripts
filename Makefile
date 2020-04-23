@@ -15,3 +15,6 @@ download-websites:
 
 execute-scripts:
 	node execute-scripts.js
+
+test:
+	./node_modules/.bin/xo

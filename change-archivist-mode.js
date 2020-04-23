@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';;
+import fetch from 'node-fetch';
 import config from './config.js';
 
 const archivistURL = config.archivistModeURL;
@@ -6,7 +6,7 @@ const archivistURL = config.archivistModeURL;
 async function matchesMode(mode) {
 	const rawResponse = await fetch(archivistURL);
 	const currentMode = await rawResponse.text();
-	return currentMode === mode
+	return currentMode === mode;
 }
 
 async function changeArchivistMode(mode) {
@@ -16,11 +16,11 @@ async function changeArchivistMode(mode) {
 	}
 
 	await fetch(archivistURL, {
-		"headers": {
-			"content-type": "application/x-www-form-urlencoded"
+		headers: {
+			'content-type': 'application/x-www-form-urlencoded'
 		},
-		"body": `mode=${mode}`,
-		"method": "POST"
+		body: `mode=${mode}`,
+		method: 'POST'
 	});
 
 	if (await matchesMode(mode)) {
@@ -28,6 +28,6 @@ async function changeArchivistMode(mode) {
 	} else {
 		throw new Error('Failed to change archivist mode');
 	}
-}	
+}
 
 export default changeArchivistMode;
