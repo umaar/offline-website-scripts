@@ -24,4 +24,5 @@ jobs:
             ${{ runner.OS }}-
 
       - run: npm install --ignore-scripts
-      - run: npm test
+      - run: echo "Node.js version: `node -v`"
+      - run: make test
