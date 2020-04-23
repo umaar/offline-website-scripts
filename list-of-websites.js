@@ -245,8 +245,8 @@ const urls = [
 ];
 
 async function getWebsites() {
-	// Return urls.slice(0, 3);
-	return urls;
+	return urls.slice(0, 3);
+	// return urls;
 }
 
 export default getWebsites;
