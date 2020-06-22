@@ -1,5 +1,11 @@
 import path from 'path';
 
+function sleep(ms = 1000) {
+	return new Promise(resolve => {
+		setTimeout(resolve, ms);
+	})
+}
+
 const screenshotOutputFolder = path.join(process.cwd(), 'results', 'disable-javascript-screenshot', 'images');
 
 async function takeScreenshot(page, filename) {
