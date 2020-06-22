@@ -245,7 +245,9 @@ const urls = [
 ];
 
 async function getWebsites() {
-	return urls;
+	return urls.slice(0,10);
+	// return urls;
+	// return ['https://mdn.github.io/learning-area/html/multimedia-and-embedding/responsive-images/responsive.html', 'https://red-badger.com/'];
 }
 
 export default getWebsites;

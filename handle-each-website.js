@@ -10,6 +10,8 @@ async function start({mode = 'serve', pageHandler}) {
 	});
 
 	const page = await browser.newPage();
+	await page.setCacheEnabled(false);
+	await page.setViewport({width: 1600, height: 800});
 
 	await changeArchivistMode(mode);
 
@@ -17,10 +19,11 @@ async function start({mode = 'serve', pageHandler}) {
 	const results = [];
 	for (const url of allWebsites) {
 		currentIndex++;
-		console.log(`\nNavigating to: ${url} (${currentIndex}/${allWebsites.length})`);
-		let pageResponse;
 
-		const startTime = Date.now();
+		console.log(`\n#### [${(new URL(url)).hostname}](${url}) (${currentIndex}/${allWebsites.length})\n`);
+
+		// console.log(`\n#### Navigating to: ${url} (${currentIndex}/${allWebsites.length})`);
+		let pageResponse;
 
 		try {
 			pageResponse = await page.goto(url, { // eslint-disable-line no-await-in-loop
@@ -30,10 +33,6 @@ async function start({mode = 'serve', pageHandler}) {
 			console.log(`\tError navigating to: ${url}`, error.message);
 			continue;
 		}
-
-		const endTime = Date.now();
-
-		console.log(`\t${endTime - startTime}ms`);
 
 		// If archivist doesn't have the page in its cache
 		// it returns with a text/plain content type
@@ -50,24 +49,8 @@ async function start({mode = 'serve', pageHandler}) {
 			continue;
 		}
 
-		if (pageHandler) {
-			results.push({
-				url,
-				result: await pageHandler(page) // eslint-disable-line no-await-in-loop
-			});
-		}
+		await pageHandler({page, url}); // eslint-disable-line no-await-in-loop
 	}
-
-	console.log('\n--- BEGIN COPY\n');
-	for (const {url, result} of results) {
-		console.log(`#### [${(new URL(url)).hostname}](${url})\n`);
-		console.log('```html');
-		console.log(result[0]);
-		console.log('```');
-		console.log('---');
-	}
-
-	console.log('\n END COPY ---\n');
 
 	await page.close();
 	browser.disconnect();
