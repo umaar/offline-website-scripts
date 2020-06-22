@@ -14,8 +14,6 @@ async function getAnchors(page) {
 	const result = await page.evaluate(scriptToEvaluate);
 
 	console.log(`${url}: ${result.length}`);
-
-	return result.join('\n');
 }
 
 export default getAnchors;

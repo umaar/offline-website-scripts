@@ -16,8 +16,6 @@ async function getLinkedImages(page) {
 	const result = await page.evaluate(scriptToEvaluate);
 
 	console.log(`${url}: ${result}`);
-
-	return 'this is some random result!!!!!';
 }
 
 export default getLinkedImages;

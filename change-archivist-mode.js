@@ -11,7 +11,6 @@ async function matchesMode(mode) {
 
 async function changeArchivistMode(mode) {
 	if (await matchesMode(mode)) {
-		console.log(`Already in ${mode} mode!`);
 		return;
 	}
 
