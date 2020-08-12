@@ -1,91 +1,91 @@
 async function getDocumentNodeID(client) {
-    const {root} = await client.send('DOM.getDocument');
-    return root.nodeId;
+	const {root} = await client.send('DOM.getDocument');
+	return root.nodeId;
 }
 
 async function executeEventListenersCommand(client, objectID) {
-    const {listeners} = await client.send('DOMDebugger.getEventListeners', {
-        objectId: objectID
-    });
+	const {listeners} = await client.send('DOMDebugger.getEventListeners', {
+		objectId: objectID
+	});
 
-    return listeners.filter(({type}) => type === 'click').length;
+	return listeners.filter(({type}) => type === 'click').length;
 }
 
 async function getEventListenersOnHTML(client) {
-    const {result} = await client.send('Runtime.evaluate', {
-        expression: `document.querySelector('html')`
-    });
+	const {result} = await client.send('Runtime.evaluate', {
+		expression: 'document.querySelector(\'html\')'
+	});
 
-    return executeEventListenersCommand(client, result.objectId)
+	return executeEventListenersCommand(client, result.objectId);
 }
 
 async function getEventListenersOnDocument(client) {
-    const {result} = await client.send('Runtime.evaluate', {
-        expression: `document`
-    });
+	const {result} = await client.send('Runtime.evaluate', {
+		expression: 'document'
+	});
 
-    return executeEventListenersCommand(client, result.objectId)
+	return executeEventListenersCommand(client, result.objectId);
 }
 
 async function getEventListenersOnBody(client) {
-    const {result} = await client.send('Runtime.evaluate', {
-        expression: `document.body`
-    });
+	const {result} = await client.send('Runtime.evaluate', {
+		expression: 'document.body'
+	});
 
-    return executeEventListenersCommand(client, result.objectId)
+	return executeEventListenersCommand(client, result.objectId);
 }
 
 async function getEventListenersByNode(client, nodeID) {
-    const {object} = await client.send('DOM.resolveNode', {
-        nodeId: nodeID
-    })
+	const {object} = await client.send('DOM.resolveNode', {
+		nodeId: nodeID
+	});
 
-    return executeEventListenersCommand(client, object.objectId)
+	return executeEventListenersCommand(client, object.objectId);
 }
 
 async function getOuterHTML(client, nodeID) {
-    const {outerHTML} = await client.send('DOM.getOuterHTML', {
-        nodeId: nodeID
-    });
+	const {outerHTML} = await client.send('DOM.getOuterHTML', {
+		nodeId: nodeID
+	});
 
-    return outerHTML;
+	return outerHTML;
 }
 
 async function getNodeIDsForSelector(client, selector) {
-    const documentNodeID = await getDocumentNodeID(client);
+	const documentNodeID = await getDocumentNodeID(client);
 	const {nodeIds} = await client.send('DOM.querySelectorAll', {
-        selector,
-        nodeId: documentNodeID
-    });
+		selector,
+		nodeId: documentNodeID
+	});
 
-    return nodeIds;
+	return nodeIds;
 }
 
 async function getAnchors(page) {
 	const client = await page.target().createCDPSession();
 
-    const selector = `a:not([href]),a[href^="javascript:void(0)"],a[href=""]`;
-    const nodeIDs = await getNodeIDsForSelector(client, selector)
-    console.log('Anchors elements needing attention: ', nodeIDs.length);
+	const selector = 'a:not([href]),a[href^="javascript:void(0)"],a[href=""]';
+	const nodeIDs = await getNodeIDsForSelector(client, selector);
+	console.log('Anchors elements needing attention:', nodeIDs.length);
 
-    const eventListenersOnDocumentCount = (await getEventListenersOnDocument(client))
-    const eventListenersOnBodyCount = (await getEventListenersOnBody(client))
-    const getEventListenersOnHTMLCount = (await getEventListenersOnHTML(client))
+	const eventListenersOnDocumentCount = (await getEventListenersOnDocument(client));
+	const eventListenersOnBodyCount = (await getEventListenersOnBody(client));
+	const getEventListenersOnHTMLCount = (await getEventListenersOnHTML(client));
 
-    console.log(`HTML Event Listeners: ${getEventListenersOnHTMLCount}`);
-    console.log(`Document Event Listeners: ${eventListenersOnDocumentCount}`);
-    console.log(`Body Event Listeners: ${eventListenersOnBodyCount}`);
+	console.log(`HTML Event Listeners: ${getEventListenersOnHTMLCount}`);
+	console.log(`Document Event Listeners: ${eventListenersOnDocumentCount}`);
+	console.log(`Body Event Listeners: ${eventListenersOnBodyCount}`);
 
-    for (const nodeID of nodeIDs) {
-        const html = await getOuterHTML(client, nodeID)
-        const eventListenersOnAnchorCount = (await getEventListenersByNode(client, nodeID));
+	for (const nodeID of nodeIDs) {
+		const html = await getOuterHTML(client, nodeID); // eslint-disable-line no-await-in-loop
+		const eventListenersOnAnchorCount = (await getEventListenersByNode(client, nodeID)); // eslint-disable-line no-await-in-loop
 
-        console.log('\n```html');
-        console.log(html);
-        console.log('```\n');
+		console.log('\n```html');
+		console.log(html);
+		console.log('```\n');
 
-        console.log(`Event listeners on this element: ${eventListenersOnAnchorCount}\n`);
-    }
+		console.log(`Event listeners on this element: ${eventListenersOnAnchorCount}\n`);
+	}
 }
 
 export default getAnchors;

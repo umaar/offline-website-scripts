@@ -16,13 +16,13 @@ async function start({mode = 'serve', pageHandler}) {
 	await changeArchivistMode(mode);
 
 	const allWebsites = await getWebsites();
-	const results = [];
+
 	for (const url of allWebsites) {
 		currentIndex++;
 
 		console.log(`\n#### [${(new URL(url)).hostname}](${url}) (${currentIndex}/${allWebsites.length})\n`);
 
-		// console.log(`\n#### Navigating to: ${url} (${currentIndex}/${allWebsites.length})`);
+		// Console.log(`\n#### Navigating to: ${url} (${currentIndex}/${allWebsites.length})`);
 		let pageResponse;
 
 		try {

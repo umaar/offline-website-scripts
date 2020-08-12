@@ -8,14 +8,14 @@ import disableJavaScriptScreenshot from './scripts/disable-javascript-screenshot
 async function main() {
 	handleEachWebsite({
 		mode: 'serve',
-		async pageHandler(args) {
-			// const scripts = [getAnchors];
+		async pageHandler(arguments_) {
+			// Const scripts = [getAnchors];
 			// const scripts = [getEventListenersOnAnchors];
 			// const scripts = [getResponsiveImages];
 			const scripts = [disableJavaScriptScreenshot];
 
 			for (const script of scripts) {
-				await script(args);
+				await script(arguments_); // eslint-disable-line no-await-in-loop
 			}
 		}
 	});

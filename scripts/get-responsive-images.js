@@ -3,12 +3,13 @@ import * as html from 'html';
 const prettyPrint = html.default.prettyPrint;
 
 function script() {
-	const images = [...document.querySelectorAll('img[srcset]')]
-		.filter(el => !el.getAttribute('src'))
+	const images = [...document.querySelectorAll('img[srcset]')] // eslint-disable-line no-undef
+		.filter(element => !element.getAttribute('src'));
 
-	const pictures = [...document.querySelectorAll('picture')].filter(el => {
-		return !el.querySelector('img') || !el.querySelector('img').getAttribute('src')
-	})
+	const pictures = [...document.querySelectorAll('picture')] // eslint-disable-line no-undef
+		.filter(element => {
+			return !element.querySelector('img') || !element.querySelector('img').getAttribute('src');
+		});
 
 	const els = [...images, ...pictures]
 		.map(element => element.outerHTML);
@@ -17,19 +18,19 @@ function script() {
 }
 
 async function getResponsiveImages(page) {
-	const url = await page.url();
 	const scriptToEvaluate = `(${script.toString()})()`;
 	const results = await page.evaluate(scriptToEvaluate);
 
-    
-	if (results.length) {
+	if (results.length > 0) {
 		console.log('```html');
-		for (const el of results) {
-			console.log(prettyPrint(el), '\n');		
+		for (const element of results) {
+			console.log(prettyPrint(element), '\n');
 		}
+
 		console.log('```');
 	}
-    console.log('\n---\n');
+
+	console.log('\n---\n');
 }
 
 export default getResponsiveImages;
