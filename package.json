@@ -13,7 +13,7 @@
   "dependencies": {
     "archivist1": "^1.1.20",
     "html": "^1.0.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.1.1",
     "puppeteer": "^4.0.0"
   },
   "devDependencies": {
